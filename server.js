@@ -8,7 +8,7 @@ console.log("routing resources in " + resourceDir);
 
 
 var mazeDB = {
-  "five-by-five" : {
+  "fivebyfive" : {
       cells : {
         "cell0":[1,1,1,0],
         "cell1":[1,1,1,0],
@@ -50,7 +50,7 @@ var app = {
 var $P = new Percolator(app);
 
 $P.expressStart(function(err){
-  if (err) {console.log(err);throw err;}
+  if (err) {console.dir(err);throw err;}
   console.log('Percolator running on ' + $P.port);
 });
 

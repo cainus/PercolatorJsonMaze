@@ -5,11 +5,6 @@ var _ = require('underscore');
 exports.handler = new resource({
 
   GET : function(req, res){
-    console.log("accpet");
-    console.log(req.headers.accept);
-    console.log(req.headers.host);
-    console.log("accpet");
-    console.log(req);
     var that = this;
     var app = this.app;
     console.log("links: ", that.uri.links());
@@ -40,11 +35,13 @@ exports.handler = new resource({
 
 exports.member = new resource({
   fetch : function(req, cb){
-    cb("can't find");
+    console.log("got here too");
+    cb(null, "found!");
   },
 
   GET : function(req, res){
+    console.log("got here");
     var member = req.resource.fetched;
-    that.repr({test : "member GET"});
+    this.repr({test : "member GET"});
   }
 });
