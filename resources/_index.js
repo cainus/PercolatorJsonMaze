@@ -11,6 +11,7 @@ exports.handler = new resource({
     console.log(this.app.mazeDB);
     var representation = { 
       collection : {
+            mazes : [],
             _links : {
               self : {
                 href : that.uri.self()
@@ -20,9 +21,8 @@ exports.handler = new resource({
     };
     _.each(this.app.mazeDB, function(v, name){
       var link = that.uri.self() + '/' + that.uri.urlEncode(name);
-      representation.collection._links[name] = {
-        href : link
-      };
+      var item = {name : name,  _links : {maze  : {href : link}}};
+      representation.collection.mazes.push(item);
     });
 
     this.repr(req, res, representation);
@@ -35,13 +35,23 @@ exports.handler = new resource({
 
 exports.member = new resource({
   fetch : function(req, cb){
-    console.log("got here too");
-    cb(null, "found!");
+    var name = this.uri.param('root');
+    var maze = this.app.mazeDB[name];
+    if (!maze){ cb(true); }
+    cb(null, maze);
   },
 
   GET : function(req, res){
-    console.log("got here");
+    var name = this.uri.param('root');
     var member = req.resource.fetched;
-    this.repr({test : "member GET"});
+    var maze = {  
+                  name : name,
+                  //cells : member.cells,
+                  _links : {
+                            self : this.uri.self(),
+                            collection : this.uri.absolute(this.uri.parent()),
+                            start : this.uri.self() + '/0:north'
+                          }};
+    this.repr(req, res, maze);
   }
 });
