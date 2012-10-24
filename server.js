@@ -41,16 +41,25 @@ var mazeDB = {
 
 var app = {
   protocol : 'http',
-  resourceDir : resourceDir,
-  resourcePath : '/maze',
-  staticDir : __dirname + '/static',
+  resourcePath : '/',
   port : 8080,
   mazeDB : mazeDB
 };
-var $P = new Percolator(app);
+var server = new Percolator(app);
 
-$P.expressStart(function(err){
-  if (err) {console.dir(err);throw err;}
-  console.log('Percolator running on ' + $P.port);
+server.route('maze', function($){
+  var mazenames= [];
+  _.each($.app.mazeDB, function(v, k){
+    mazenames.push({ name : k});
+  });
+  $.jsonCollection(mazenames)
+      .linkEach('self', function(item){
+        return $.uri.child(item.name);
+      })
+      .send();
 });
 
+server.listen(function(err){
+  if (err) {console.log(err);throw err;}
+  console.log('Percolator running on ' + server.port);
+});

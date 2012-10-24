@@ -2,6 +2,10 @@ var collection = require('resorcery').collection;
 var resource = require('resorcery').resource;
 var _ = require('underscore');
 
+
+
+
+
 exports.handler = new resource({
 
   GET : function(req, res){
@@ -21,7 +25,7 @@ exports.handler = new resource({
     };
     _.each(this.app.mazeDB, function(v, name){
       var link = that.uri.self() + '/' + that.uri.urlEncode(name);
-      var item = {name : name,  _links : {maze  : {href : link}}};
+      var item = {name : name,  _links : {self  : {href : link}}};
       representation.collection.mazes.push(item);
     });
 
